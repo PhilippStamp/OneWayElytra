@@ -1,0 +1,4 @@
+name: OneWayElytra
+version: '1.0'
+main: de.philippstamp.oneWayElytra.OneWayElytra
+api-version: '1.21'
