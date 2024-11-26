@@ -1,0 +1,13 @@
+##
+## OneWayElytra | language.yml
+##
+
+prefix: '&5OneWayElytra &f» '
+commandDenied: '&cYou are not allowed to execute this command!'
+locationSet: '&7You set the location &asuccessfully&7.'
+tooManyArgs: '&cYou tried to use too many arguments. Please try &4/onewayelytra&c.'
+
+## boostmessage
+primary_color: "light_gray"
+secondary_color: "yellow"
+boostMessage: 'Press %keybinding% to get a boost.'

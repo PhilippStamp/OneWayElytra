@@ -1,4 +1,10 @@
 name: OneWayElytra
-version: '1.0'
+version: '1.0.0'
 main: de.philippstamp.oneWayElytra.OneWayElytra
-api-version: '1.21'
+author: JuggleGaming
+api-version: '1.21.3'
+
+commands:
+  onewayelytra:
+    description: "OneWayElytra"
+    aliases: [owe]
