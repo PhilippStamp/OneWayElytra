@@ -1,0 +1,11 @@
+##
+## OneWayElytra | language.yml
+##
+
+prefix: '&5OWE &f» '
+commandDenied: '&cDu darfst diesen Befehl nicht benutzen.'
+locationSet: '&7Du hast die Position&a erfolgreich &7gesetzt.'
+radiusSet: '&7Du hast den Radius auf &a%radius% Blöcke &7eingestellt.'
+boostMultiplierSet: '&7Du hast den Boostmultiplikator auf &a%multiplier% &7gesetzt.'
+wrongArgs: '&cDu hast einen Fehler bei der Eingabe gemacht. Benutze &4/onewayelytra&c.'
+boostMessage: '&7Schlag in die Luft, um einen Schub zu erhalten.'

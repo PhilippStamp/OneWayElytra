@@ -1,9 +1,6 @@
 package de.philippstamp.oneWayElytra.utils;
 
 import de.philippstamp.oneWayElytra.OneWayElytra;
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.ComponentBuilder;
-import net.md_5.bungee.api.chat.KeybindComponent;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
@@ -27,6 +24,22 @@ public class Tools {
               .replaceAll("%coins%", "⛃");
   }
 
+  public String replaceVariables(String text, Integer integer) {
+    return ChatColor.translateAlternateColorCodes('&', text)
+            .replaceAll("%>>%", "»")
+            .replaceAll("%<<%", "«")
+            .replaceAll("%ue%", "ü")
+            .replaceAll("%ae%", "ä")
+            .replaceAll("%oe%", "ö")
+            .replaceAll("%ss%", "ß")
+            .replaceAll("%coin%", "⛂")
+            .replaceAll("%coins%", "⛃")
+            .replaceAll("%radius%", integer + "")
+            .replaceAll("%multiplier%", integer + "")
+            .replaceAll("%boostMultiplier%", integer + "")
+            .replaceAll("%boostmultiplier%", integer + "");
+  }
+
   public String replaceVariables(Player player, String text) {
     return ChatColor.translateAlternateColorCodes('&', text)
               .replaceAll("%>>%", "»")
@@ -40,7 +53,7 @@ public class Tools {
               .replaceAll("%player%", player.getName());
   }
 
-  public String replaceVariables(String text, Double money) {
+  public String replaceVariables(String text, Double inputDouble) {
     return ChatColor.translateAlternateColorCodes('&', text)
                     .replaceAll("%>>%", "»")
                     .replaceAll("%<<%", "«")
@@ -50,7 +63,10 @@ public class Tools {
                     .replaceAll("%ss%", "ß")
                     .replaceAll("%coin%", "⛂")
                     .replaceAll("%coins%", "⛃")
-                    .replaceAll("%money%", money.toString());
+                    .replaceAll("%money%", inputDouble.toString())
+                    .replaceAll("%multiplier%", inputDouble + "")
+                    .replaceAll("%boostMultiplier%", inputDouble + "")
+                    .replaceAll("%boostmultiplier%", inputDouble + "");
   }
 
   public String replaceVariables(Player player, String text, Double money) {
@@ -80,9 +96,20 @@ public class Tools {
             .replaceAll("%time%", time + "");
   }
 
+
+
   public boolean isInt(String s) {
     try {
       Integer.parseInt(s);
+    } catch (NumberFormatException nfe) {
+      return false;
+    }
+    return true;
+  }
+
+  public boolean isDouble(String string) {
+    try {
+      Double.parseDouble(string);
     } catch (NumberFormatException nfe) {
       return false;
     }

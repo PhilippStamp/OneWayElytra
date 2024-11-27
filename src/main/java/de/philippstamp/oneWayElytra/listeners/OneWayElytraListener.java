@@ -17,8 +17,10 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityToggleGlideEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.event.player.PlayerToggleFlightEvent;
 
@@ -29,7 +31,6 @@ public class OneWayElytraListener implements Listener {
 
     private int radius;
     private int boostMultiplier;
-    private boolean boostEnabled;
     private List<Player> playersFlying = new ArrayList<>();
     private List<Player> playersBoosted = new ArrayList<>();
 
@@ -38,7 +39,6 @@ public class OneWayElytraListener implements Listener {
     public OneWayElytraListener(OneWayElytra oneWayElytra){
         this.oneWayElytra = oneWayElytra;
         this.radius = oneWayElytra.getFm().getConfig().getInt("radius");
-        this.boostMultiplier = oneWayElytra.getFm().getConfig().getInt("boostMultiplier");
 
         Bukkit.getScheduler().runTaskTimer(oneWayElytra, () -> {
             Bukkit.getWorld(oneWayElytra.getFm().getConfig().getString("location.world")).getPlayers().forEach(player -> {
@@ -67,18 +67,20 @@ public class OneWayElytraListener implements Listener {
                 event.setCancelled(true);
                 event.getPlayer().setGliding(true);
                 playersFlying.add(event.getPlayer());
+                ActionBar.send(event.getPlayer(), oneWayElytra.getTools().replaceVariables(oneWayElytra.getFm().getMessages().getString("boostMessage")));
 
+                /*
                 String message = oneWayElytra.getTools().replaceVariables(oneWayElytra.getFm().getMessages().getString("boostMessage"));
                 String[] split = message.split("%keybinding%");
 
                 /// NEU ANFANG
                 ChatColor primary_color = ChatColor.GRAY;
-                if(oneWayElytra.getFm().getMessages().getString("primary_color") != null)
-                    primary_color = ChatColor.of(oneWayElytra.getFm().getMessages().getString("secondary_color"));
+                //if(oneWayElytra.getFm().getMessages().getString("primary_color") != null)
+                    //primary_color = ChatColor.of(oneWayElytra.getFm().getMessages().getString("secondary_color"));
 
                 ChatColor secondary_color = ChatColor.YELLOW;
-                if(oneWayElytra.getFm().getMessages().getString("secondary_color") != null)
-                    secondary_color = ChatColor.of(oneWayElytra.getFm().getMessages().getString("secondary_color"));
+                //if(oneWayElytra.getFm().getMessages().getString("secondary_color") != null)
+                    //secondary_color = ChatColor.of(oneWayElytra.getFm().getMessages().getString("secondary_color"));
 
 
                 TextComponent tc1 = new TextComponent(split[0]); tc1.setColor(primary_color);
@@ -119,12 +121,30 @@ public class OneWayElytraListener implements Listener {
         }
     }
 
+    /*
     @EventHandler
     public void onDoubleJump(PlayerSwapHandItemsEvent event){
         if (!playersBoosted.contains(event.getPlayer()) && playersFlying.contains(event.getPlayer())) {
             event.setCancelled(true);
             playersBoosted.add(event.getPlayer());
             event.getPlayer().setVelocity(event.getPlayer().getLocation().getDirection().multiply(boostMultiplier));
+        }
+    }
+    */
+
+    @EventHandler
+    public void onBoost(PlayerInteractEvent event){
+        if (!playersBoosted.contains(event.getPlayer()) && playersFlying.contains(event.getPlayer())) {
+            this.boostMultiplier = oneWayElytra.getFm().getConfig().getInt("boostMultiplier");
+            if(event.getAction().equals(Action.LEFT_CLICK_AIR)){
+                event.setCancelled(true);
+                playersBoosted.add(event.getPlayer());
+                event.getPlayer().setVelocity(event.getPlayer().getLocation().getDirection().multiply(boostMultiplier));
+            } else if(event.getAction().equals(Action.RIGHT_CLICK_AIR)){
+                event.setCancelled(true);
+                playersBoosted.add(event.getPlayer());
+                event.getPlayer().setVelocity(event.getPlayer().getLocation().getDirection().multiply(boostMultiplier));
+            }
         }
     }
 
