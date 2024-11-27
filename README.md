@@ -40,7 +40,7 @@ location:
 
 
 <details>
-<summary>language.yml</summary>
+<summary>language.yml | EN</summary>
 
 
 ```
@@ -60,6 +60,29 @@ primary_color: light_gray
 secondary_color: yellow
 # # please do not use colorcodes. The primary color will be used for the message and the secondary color will be used for the keybinding.
 boostMessage: Press %keybinding% to get a boost.
+
+```
+
+
+</details>
+
+
+<details>
+<summary>Spoiler</summary>
+
+
+```
+##
+## OneWayElytra | language.yml
+##
+
+prefix: '&5OneWayElytra &f» '
+commandDenied: '&cDu darfst diesen Befehl nicht benutzen.'
+locationSet: '&7Du hast die Position&a erfolgreich &7gesetzt.'
+radiusSet: '&7Du hast den Radius auf &a%radius% Blöcke &7eingestellt.'
+boostMultiplierSet: '&7Du hast den Boostmultiplikator auf &a%multiplier% &7gesetzt.'
+wrongArgs: '&cDu hast einen Fehler bei der Eingabe gemacht. Benutze &4/onewayelytra&c.'
+boostMessage: '&7Schlag in die Luft, um einen Schub zu erhalten.'
 
 ```
 
