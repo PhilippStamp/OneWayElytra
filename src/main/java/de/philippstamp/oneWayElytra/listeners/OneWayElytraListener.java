@@ -67,9 +67,6 @@ public class OneWayElytraListener implements Listener {
                 event.setCancelled(true);
                 event.getPlayer().setGliding(true);
                 playersFlying.add(event.getPlayer());
-                //ActionBar.send(event.getPlayer(), oneWayElytra.getTools().replaceVariables(oneWayElytra.getFm().getMessages().getString("boostMessage"), "key.swapOffhand"));
-                //ActionBar.send(event.getPlayer(), oneWayElytra.getTools().replaceVariables(oneWayElytra.getFm().getMessages().getString("boostMessage"), "key.swapOffhand"));
-                //event.getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, new ComponentBuilder().append(new KeybindComponent("key.swapOffhand")).create());
 
                 String message = oneWayElytra.getTools().replaceVariables(oneWayElytra.getFm().getMessages().getString("boostMessage"));
                 String[] split = message.split("%keybinding%");
@@ -83,26 +80,19 @@ public class OneWayElytraListener implements Listener {
                 if(oneWayElytra.getFm().getMessages().getString("secondary_color") != null)
                     secondary_color = ChatColor.of(oneWayElytra.getFm().getMessages().getString("secondary_color"));
 
-                /*
+
                 TextComponent tc1 = new TextComponent(split[0]); tc1.setColor(primary_color);
                 TextComponent tc2 = new TextComponent(new KeybindComponent("key.swapOffhand")); tc2.setColor(secondary_color);
                 TextComponent tc3 = new TextComponent(split[1]); tc3.setColor(primary_color);
                 BaseComponent[] baseComponent = new ComponentBuilder().append(tc1).append(tc2).append(tc3).create();
-                 */
 
-                TextComponent tc1 = new TextComponent(split[0]);
-                TextComponent tc2 = new TextComponent(new KeybindComponent("key.swapOffhand"));
-                TextComponent tc3 = new TextComponent(split[1]);
-                BaseComponent[] baseComponent = new ComponentBuilder().append(tc1).append(tc2).append(tc3).create();
 
-                //event.getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, baseComponent);
-
-                ActionBar.send(event.getPlayer(), oneWayElytra.tools.replaceVariables(baseComponent.toString()));
+                event.getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, baseComponent);
                 /// NEU ENDE
 
 
                 /**
-                 *   Ursprüngliche Version falls dir die Neue nicht gefällt
+                 *   Ursprüngliche Version
                  */
                 /*
                 TextComponent textComponent =  new TextComponent();
@@ -112,26 +102,26 @@ public class OneWayElytraListener implements Listener {
 
                 event.getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, textComponent);
                 */
-
-
             }
         }
     }
 
     @EventHandler
     public void onEntityDamage(EntityDamageEvent event){
-        if(event.getEntityType() == EntityType.PLAYER &&
-                event.getCause() == EntityDamageEvent.DamageCause.FALL ||
-                event.getCause() == EntityDamageEvent.DamageCause.FLY_INTO_WALL &&
-                        playersFlying.contains(event.getEntity())) {
-
-            event.setCancelled(true);
+        if(event.getEntityType() == EntityType.PLAYER){
+            if(playersFlying.contains(event.getEntity())){
+                if(event.getCause() == EntityDamageEvent.DamageCause.FALL){
+                    event.setCancelled(true);
+                } else if(event.getCause() == EntityDamageEvent.DamageCause.FLY_INTO_WALL){
+                    event.setCancelled(true);
+                }
+            }
         }
     }
 
     @EventHandler
     public void onDoubleJump(PlayerSwapHandItemsEvent event){
-        if (!playersBoosted.contains(event.getPlayer())) {
+        if (!playersBoosted.contains(event.getPlayer()) && playersFlying.contains(event.getPlayer())) {
             event.setCancelled(true);
             playersBoosted.add(event.getPlayer());
             event.getPlayer().setVelocity(event.getPlayer().getLocation().getDirection().multiply(boostMultiplier));

@@ -10,4 +10,5 @@ tooManyArgs: '&cYou tried to use too many arguments. Please try &4/onewayelytra&
 ## boostmessage
 primary_color: "light_gray"
 secondary_color: "yellow"
+## please do not use colorcodes. The primary color will be used for the message and the secondary color will be used for the keybinding
 boostMessage: 'Press %keybinding% to get a boost.'
