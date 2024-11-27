@@ -48,7 +48,7 @@ location:
 # # OneWayElytra | language.yml
 # #
 
-prefix: '&5OneWayElytra &f» '
+prefix: '&5OWE &f» '
 commandDenied: '&cYou are not allowed to execute this command!'
 locationSet: '&7You set the location &asuccessfully&7.'
 radiusSet: '&7You set the radius to &a%radius%&7.'
@@ -68,7 +68,7 @@ boostMessage: Press %keybinding% to get a boost.
 
 
 <details>
-<summary>Spoiler</summary>
+<summary>language.yml | DE</summary>
 
 
 ```
@@ -76,7 +76,7 @@ boostMessage: Press %keybinding% to get a boost.
 ## OneWayElytra | language.yml
 ##
 
-prefix: '&5OneWayElytra &f» '
+prefix: '&5OWE &f» '
 commandDenied: '&cDu darfst diesen Befehl nicht benutzen.'
 locationSet: '&7Du hast die Position&a erfolgreich &7gesetzt.'
 radiusSet: '&7Du hast den Radius auf &a%radius% Blöcke &7eingestellt.'
