@@ -44,9 +44,9 @@ location:
 
 
 ```
-# #
-# # OneWayElytra | language.yml
-# #
+##
+## OneWayElytra | language.yml
+##
 
 prefix: '&5OWE &f» '
 commandDenied: '&cYou are not allowed to execute this command!'
@@ -54,12 +54,7 @@ locationSet: '&7You set the location &asuccessfully&7.'
 radiusSet: '&7You set the radius to &a%radius%&7.'
 boostMultiplierSet: '&7You set the boostmultiplier to &a%multiplier%&7.'
 wrongArgs: '&cYou tried to use wrong arguments. Please check &4/onewayelytra&c.'
-
-# # boostmessage
-primary_color: light_gray
-secondary_color: yellow
-# # please do not use colorcodes. The primary color will be used for the message and the secondary color will be used for the keybinding.
-boostMessage: Press %keybinding% to get a boost.
+boostMessage: '&7Click into the air to get a boost!'
 
 ```
 
