@@ -1,8 +1,8 @@
 name: OneWayElytra
-version: '1.0.0'
+version: '1.0.1'
 main: de.philippstamp.oneWayElytra.OneWayElytra
 author: JuggleGaming
-api-version: '1.21.3'
+api-version: '1.21.4'
 
 commands:
   onewayelytra:
