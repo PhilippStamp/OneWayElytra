@@ -10,6 +10,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.Arrays;
+
 public final class OneWayElytra extends JavaPlugin {
 
     private static OneWayElytra Instance;
@@ -39,6 +41,10 @@ public final class OneWayElytra extends JavaPlugin {
 
         registerCommands();
         ccs.sendMessage(prefix + "Commands successfully registered!");
+
+        //getFm().getConfig().set("positions", Arrays.asList("farmworld_nether,0,50,0", "farmworld,0,0,0"));
+        getFm().saveYamls();
+        oneWayElytraListener.loadPositions();
 
         ccs.sendMessage(prefix + "*~*~*~*~*~*~*~* <<OneWayElytra>> *~*~*~*~*~*~*~*");
         ccs.sendMessage(prefix + "Plugin successfully loaded!");

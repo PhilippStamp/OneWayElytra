@@ -2,12 +2,6 @@ package de.philippstamp.oneWayElytra.listeners;
 
 import de.philippstamp.oneWayElytra.OneWayElytra;
 import de.philippstamp.oneWayElytra.utils.ActionBar;
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.ComponentBuilder;
-import net.md_5.bungee.api.chat.KeybindComponent;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.EntityType;
@@ -26,17 +20,17 @@ public class OneWayElytraListener implements Listener {
 
     private int radius;
     private int boostMultiplier;
+    private final List<Location> positions = new ArrayList<>();
     private List<Player> playersFlying = new ArrayList<>();
     private List<Player> playersBoosted = new ArrayList<>();
 
     private OneWayElytra oneWayElytra;
 
-    public OneWayElytraListener(OneWayElytra oneWayElytra){
+    public OneWayElytraListener(OneWayElytra oneWayElytra) {
         this.oneWayElytra = oneWayElytra;
         this.radius = oneWayElytra.getFm().getConfig().getInt("radius");
-        String worldName;
         World world = Bukkit.getWorld(oneWayElytra.getFm().getConfig().getString("location.world"));
-        if(world != null) {
+        if (world != null) {
             Bukkit.getScheduler().runTaskTimer(oneWayElytra, () -> {
                 Bukkit.getWorld(oneWayElytra.getFm().getConfig().getString("location.world")).getPlayers().forEach(player -> {
                     if (player.getGameMode() == GameMode.SURVIVAL) {
@@ -55,6 +49,50 @@ public class OneWayElytraListener implements Listener {
                 });
             }, 0, 3);
         }
+        Bukkit.getScheduler().runTaskTimer(oneWayElytra, () -> {
+            for (Location loc : this.positions) {
+                World playerWorld = loc.getWorld();
+                Bukkit.getWorld(playerWorld.getName()).getPlayers().forEach(player -> {
+                    if (player.getGameMode() == GameMode.SURVIVAL) {
+                        player.setAllowFlight(startCheckingTask(player));
+                        if (playersFlying.contains(player) && !player.getLocation().getBlock().getRelative(BlockFace.DOWN).getType().isAir()) {
+                            player.setAllowFlight(false);
+                            player.setGliding(false);
+                            playersBoosted.remove(player);
+
+                            Bukkit.getScheduler().runTaskLater(oneWayElytra, () -> {
+                                playersFlying.remove(player);
+                            }, 5);
+                        }
+                    }
+
+                });
+            }
+        }, 0, 3);
+
+        //if(player get world in player)
+        /*
+        Bukkit.getScheduler().runTaskTimer(oneWayElytra, () -> {
+            for (Location loc : this.positions) {
+                Bukkit.getWorld().getPlayers().forEach(player -> {
+                    if (player.getGameMode() == GameMode.SURVIVAL) {
+                        player.setAllowFlight(playerInRadius(player));
+                        if (playersFlying.contains(player) && !player.getLocation().getBlock().getRelative(BlockFace.DOWN).getType().isAir()) {
+                            player.setAllowFlight(false);
+                            player.setGliding(false);
+                            playersBoosted.remove(player);
+
+                            Bukkit.getScheduler().runTaskLater(oneWayElytra, () -> {
+                                playersFlying.remove(player);
+                            }, 5);
+                        }
+                    }
+
+                });
+            }
+        }, 0, 3);
+
+         */
 
     }
 
@@ -62,6 +100,11 @@ public class OneWayElytraListener implements Listener {
     public void onToogleFlight(PlayerToggleFlightEvent event){
         if(event.getPlayer().getGameMode() == GameMode.SURVIVAL){
             if (playerInRadius(event.getPlayer())){
+                event.setCancelled(true);
+                event.getPlayer().setGliding(true);
+                playersFlying.add(event.getPlayer());
+                ActionBar.send(event.getPlayer(), oneWayElytra.getTools().replaceVariables(oneWayElytra.getFm().getMessages().getString("boostMessage")));
+            } else if (startCheckingTask(event.getPlayer())){
                 event.setCancelled(true);
                 event.getPlayer().setGliding(true);
                 playersFlying.add(event.getPlayer());
@@ -120,7 +163,6 @@ public class OneWayElytraListener implements Listener {
     }
 
     private boolean playerInRadius(Player player){
-        String worldName;
         World world = Bukkit.getWorld(oneWayElytra.getFm().getConfig().getString("location.world"));
         if(world != null){
             if(player.getWorld().getName().equals(oneWayElytra.getFm().getConfig().getString("location.world"))){
@@ -134,9 +176,36 @@ public class OneWayElytraListener implements Listener {
                 return false;
             }
         }
-
         return false;
     }
 
+    public void loadPositions() {
+        List<String> positions = oneWayElytra.getFm().getConfig().getStringList("positions");
+        for (String locString : positions) {
+            String[] parts = locString.split(":");
+            if (parts.length == 4) {
+                try {
+                    String worldName = parts[0];
+                    double x = Double.parseDouble(parts[1]);
+                    double y = Double.parseDouble(parts[2]);
+                    double z = Double.parseDouble(parts[3]);
+                    if (Bukkit.getWorld(worldName) != null) {
+                        this.positions.add(new Location(Bukkit.getWorld(worldName), x, y, z));
+                    }
+                } catch (NumberFormatException ignored) {
+                }
+            }
+        }
+
+    }
+
+    private boolean startCheckingTask(Player player) {
+        for (Location loc : this.positions) {
+            if (player.getWorld().equals(loc.getWorld())) {
+                return loc.distance(player.getLocation()) <= radius;
+            }
+        }
+        return false;
+    }
 
 }
