@@ -37,6 +37,34 @@ public class OneWayElytraCMD implements CommandExecutor {
                             } else {
                                 player.sendMessage(oneWayElytra.prefix + oneWayElytra.getTools().replaceVariables(oneWayElytra.getFm().getMessages().getString("wrongArgs")));
                             }
+                        }else if(args[0].equalsIgnoreCase("location")){
+                            if (args[1].equalsIgnoreCase("add")){
+                                if(args[2] != null){
+                                    String locationName = args[2];
+                                    if(true) { // Check if Location exists
+                                        oneWayElytra.getFm().getConfig().set("locations." + locationName + ".world", player.getLocation().getWorld().getName());
+                                        oneWayElytra.getFm().getConfig().set("locations." + locationName + ".x", player.getLocation().getX());
+                                        oneWayElytra.getFm().getConfig().set("locations." + locationName + ".y", player.getLocation().getY());
+                                        oneWayElytra.getFm().getConfig().set("locations." + locationName + ".z", player.getLocation().getZ());
+                                        oneWayElytra.getFm().getConfig().set("locations." + locationName + ".radius", oneWayElytra.getFm().getConfig().getInt("radius"));
+                                        //oneWayElytra.getFm().getConfig().set("locations." + locationName + ".boostMultiplier", oneWayElytra.getFm().getConfig().getInt("boostMultiplier"));
+                                        oneWayElytra.getFm().saveYamls();
+                                        player.sendMessage(oneWayElytra.prefix + oneWayElytra.getTools().replaceVariables(oneWayElytra.getFm().getMessages().getString("locationSet")));
+                                    }else{
+                                        player.sendMessage(oneWayElytra.prefix + oneWayElytra.getTools().replaceVariables(oneWayElytra.getFm().getMessages().getString("locationNotFound")));
+                                    }
+                                }
+                            }
+                            if (args[1].equalsIgnoreCase("add")){
+                                oneWayElytra.getFm().getConfig().set("location.world", player.getWorld().getName());
+                                oneWayElytra.getFm().getConfig().set("location.x", player.getLocation().getX());
+                                oneWayElytra.getFm().getConfig().set("location.y", player.getLocation().getY());
+                                oneWayElytra.getFm().getConfig().set("location.z", player.getLocation().getZ());
+                                oneWayElytra.getFm().saveYamls();
+                                player.sendMessage(oneWayElytra.prefix + oneWayElytra.getTools().replaceVariables(oneWayElytra.getFm().getMessages().getString("locationSet")));
+                            } else {
+                                player.sendMessage(oneWayElytra.prefix + oneWayElytra.getTools().replaceVariables(oneWayElytra.getFm().getMessages().getString("wrongArgs")));
+                            }
                         } else {
                             player.sendMessage(oneWayElytra.prefix + oneWayElytra.getTools().replaceVariables(oneWayElytra.getFm().getMessages().getString("wrongArgs")));
                         }
@@ -46,14 +74,9 @@ public class OneWayElytraCMD implements CommandExecutor {
 
                 }
                 if(args.length == 2){
-                    if(args[0].equalsIgnoreCase("set")){
-                        if (args[1].equalsIgnoreCase("location")){
-                            oneWayElytra.getFm().getConfig().set("location.world", player.getWorld().getName());
-                            oneWayElytra.getFm().getConfig().set("location.x", player.getLocation().getX());
-                            oneWayElytra.getFm().getConfig().set("location.y", player.getLocation().getY());
-                            oneWayElytra.getFm().getConfig().set("location.z", player.getLocation().getZ());
-                            oneWayElytra.getFm().saveYamls();
-                            player.sendMessage(oneWayElytra.prefix + oneWayElytra.getTools().replaceVariables(oneWayElytra.getFm().getMessages().getString("locationSet")));
+                    if(args[0].equalsIgnoreCase("location")){
+                        if (args[1].equalsIgnoreCase("list")){
+
                         } else {
                             player.sendMessage(oneWayElytra.prefix + oneWayElytra.getTools().replaceVariables(oneWayElytra.getFm().getMessages().getString("wrongArgs")));
                         }

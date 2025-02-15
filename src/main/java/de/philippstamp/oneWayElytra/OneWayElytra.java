@@ -56,6 +56,7 @@ public final class OneWayElytra extends JavaPlugin {
         ccs.sendMessage(prefix + "Author: " + getDescription().getAuthors());
         ccs.sendMessage(prefix + "*~*~*~*~*~*~*~* <<OneWayElytra>> *~*~*~*~*~*~*~*");
 
+
     }
 
     @Override

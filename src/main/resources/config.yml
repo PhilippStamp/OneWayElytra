@@ -5,6 +5,10 @@
 ## radius in blocks
 radius: 16
 
+defaultRadius:
+  horizontal: 16
+  vertical: 10
+
 boostMultiplier: 5
 
 ## location

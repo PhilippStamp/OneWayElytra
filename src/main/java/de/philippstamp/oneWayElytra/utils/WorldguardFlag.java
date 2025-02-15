@@ -40,7 +40,6 @@ public class WorldguardFlag extends FlagValueChangeHandler {
         }
     }
 
-
     @Override
     protected void onInitialValue(LocalPlayer localPlayer, ApplicableRegionSet applicableRegionSet, Object o) {
 
