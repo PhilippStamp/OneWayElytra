@@ -12,6 +12,7 @@ import de.philippstamp.oneWayElytra.OneWayElytra;
 import de.philippstamp.oneWayElytra.utils.ActionBar;
 import de.philippstamp.oneWayElytra.utils.WorldguardFlags;
 import de.philippstamp.oneWayElytra.utils.WorldguardUtils;
+import de.philippstamp.oneWayElytra.utils.WorldguardFlag;
 import org.bukkit.*;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.EntityType;

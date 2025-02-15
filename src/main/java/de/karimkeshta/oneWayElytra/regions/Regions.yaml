@@ -1,0 +1,21 @@
+regions:
+  - name: 'Region A'
+    boostMultiplier: 5
+    location:
+      world: 'overworld'
+      x: 67.9
+      y: 78.3
+      z: -34
+    radius:
+      horizontal: 16
+      vertical: 10
+  - name: 'Region B'
+    boostMultiplier: 8
+    location:
+      world: 'nether'
+      x: 617.9
+      y: 57.3
+      z: -89.3
+    radius:
+      horizontal: 17
+      vertical: 12

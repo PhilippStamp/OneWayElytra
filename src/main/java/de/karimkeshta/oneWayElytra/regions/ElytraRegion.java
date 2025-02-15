@@ -1,4 +1,4 @@
-package de.philippstamp.oneWayElytra.utils;
+package de.karimkeshta.oneWayElytra.regions;
 
 import org.bukkit.Location;
 
