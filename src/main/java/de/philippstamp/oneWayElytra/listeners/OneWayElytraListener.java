@@ -1,7 +1,18 @@
 package de.philippstamp.oneWayElytra.listeners;
 
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldguard.LocalPlayer;
+import com.sk89q.worldguard.WorldGuard;
+import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
+import com.sk89q.worldguard.protection.ApplicableRegionSet;
+import com.sk89q.worldguard.protection.regions.ProtectedRegion;
+import com.sk89q.worldguard.protection.regions.RegionContainer;
+import com.sk89q.worldguard.protection.regions.RegionQuery;
 import de.philippstamp.oneWayElytra.OneWayElytra;
 import de.philippstamp.oneWayElytra.utils.ActionBar;
+import de.philippstamp.oneWayElytra.utils.ElytraRegion;
+import de.philippstamp.oneWayElytra.utils.WorldguardFlag;
+import org.antlr.v4.tool.Alternative;
 import org.bukkit.*;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.EntityType;
@@ -14,13 +25,17 @@ import org.bukkit.event.entity.EntityToggleGlideEvent;
 import org.bukkit.event.player.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class OneWayElytraListener implements Listener {
 
     private int radius;
     private int boostMultiplier;
-    private final List<Location> positions = new ArrayList<>();
+    private HashMap<String, Location> positionsMap = new HashMap<>();
+    private HashMap<String, Integer> boostMultiplierMap = new HashMap<>();
+    private HashMap<String, String> lastLocation = new HashMap<>();
+    private List<Location> positions = new ArrayList<>();
     private List<Player> playersFlying = new ArrayList<>();
     private List<Player> playersBoosted = new ArrayList<>();
 
@@ -29,6 +44,7 @@ public class OneWayElytraListener implements Listener {
     public OneWayElytraListener(OneWayElytra oneWayElytra) {
         this.oneWayElytra = oneWayElytra;
         this.radius = oneWayElytra.getFm().getConfig().getInt("radius");
+        /*
         World world = Bukkit.getWorld(oneWayElytra.getFm().getConfig().getString("location.world"));
         if (world != null) {
             Bukkit.getScheduler().runTaskTimer(oneWayElytra, () -> {
@@ -49,8 +65,9 @@ public class OneWayElytraListener implements Listener {
                 });
             }, 0, 3);
         }
+        */
         Bukkit.getScheduler().runTaskTimer(oneWayElytra, () -> {
-            for (Location loc : this.positions) {
+            /*for (Location loc : this.positions) {
                 World playerWorld = loc.getWorld();
                 Bukkit.getWorld(playerWorld.getName()).getPlayers().forEach(player -> {
                     if (player.getGameMode() == GameMode.SURVIVAL) {
@@ -68,33 +85,40 @@ public class OneWayElytraListener implements Listener {
 
                 });
             }
-        }, 0, 3);
+             */
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                player.sendMessage("0");
+                com.sk89q.worldedit.util.Location loc = BukkitAdapter.adapt(player.getLocation());
+                RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
+                RegionQuery query = container.createQuery();
+                ApplicableRegionSet set = query.getApplicableRegions(loc);
+                LocalPlayer localPlayer = WorldGuardPlugin.inst().wrapPlayer(player);
+                for (ProtectedRegion region : set) {
+                    player.sendMessage("1");
+                   if(set.testState(null, WorldguardFlag.ONEWAYELYTRA)){
+                        player.sendMessage("2");
+                        if (player.getGameMode() == GameMode.SURVIVAL) {
+                            player.sendMessage("3");
+                            player.setAllowFlight(true);
+                            if (playersFlying.contains(player) && !player.getLocation().getBlock().getRelative(BlockFace.DOWN).getType().isAir()) {
+                                player.sendMessage("4");
+                                player.setAllowFlight(false);
+                                player.setGliding(false);
+                                playersBoosted.remove(player);
 
-        //if(player get world in player)
-        /*
-        Bukkit.getScheduler().runTaskTimer(oneWayElytra, () -> {
-            for (Location loc : this.positions) {
-                Bukkit.getWorld().getPlayers().forEach(player -> {
-                    if (player.getGameMode() == GameMode.SURVIVAL) {
-                        player.setAllowFlight(playerInRadius(player));
-                        if (playersFlying.contains(player) && !player.getLocation().getBlock().getRelative(BlockFace.DOWN).getType().isAir()) {
-                            player.setAllowFlight(false);
-                            player.setGliding(false);
-                            playersBoosted.remove(player);
-
-                            Bukkit.getScheduler().runTaskLater(oneWayElytra, () -> {
-                                playersFlying.remove(player);
-                            }, 5);
+                                Bukkit.getScheduler().runTaskLater(oneWayElytra, () -> {
+                                    playersFlying.remove(player);
+                                }, 5);
+                            }
                         }
                     }
-
-                });
+                }
             }
         }, 0, 3);
 
-         */
-
     }
+
+    //playerInRadius-Alternative: Code, mit dem ich einen Boolean zurückerhalte, damit nur spieler in der Region flight tpogglen umgewandelt wird.
 
     @EventHandler
     public void onToogleFlight(PlayerToggleFlightEvent event){
@@ -180,6 +204,18 @@ public class OneWayElytraListener implements Listener {
     }
 
     public void loadPositions() {
+        /*Set<String> locationKeys = oneWayElytra.getFm().getConfig().getKeys(false);
+        for (String key : locationKeys) {
+            this.positionsMap.put(key, new Location(
+                    oneWayElytra.getServer().getWorld(oneWayElytra.getFm().getConfig().getString("locations." + key + ".world")),
+                    oneWayElytra.getFm().getConfig().getDouble("locations." + key + ".x"),
+                    oneWayElytra.getFm().getConfig().getDouble("locations." + key + ".y"),
+                    oneWayElytra.getFm().getConfig().getDouble("locations." + key + ".z")
+            ));
+            this.boostMultiplierMap.put(key, oneWayElytra.getFm().getConfig().getInt("locations." + key + ".boostMultiplier"));
+        }*/
+
+
         List<String> positions = oneWayElytra.getFm().getConfig().getStringList("positions");
         for (String locString : positions) {
             String[] parts = locString.split(":");

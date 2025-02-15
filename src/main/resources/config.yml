@@ -13,3 +13,11 @@ location:
   x: 0
   y: 0
   z: 0
+
+locations:
+  nether:
+    world: world
+    x: 0
+    y: 0
+    z: 0
+    radius: 8

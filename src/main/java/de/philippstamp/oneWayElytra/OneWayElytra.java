@@ -1,16 +1,16 @@
 package de.philippstamp.oneWayElytra;
 
+import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
 import de.philippstamp.oneWayElytra.commands.OneWayElytraCMD;
 import de.philippstamp.oneWayElytra.listeners.OneWayElytraListener;
 import de.philippstamp.oneWayElytra.managers.FileManager;
 import de.philippstamp.oneWayElytra.utils.Tools;
+import de.philippstamp.oneWayElytra.utils.WorldguardFlag;
 import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.event.EventHandler;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import java.util.Arrays;
 
 public final class OneWayElytra extends JavaPlugin {
 
@@ -25,8 +25,13 @@ public final class OneWayElytra extends JavaPlugin {
 
     private OneWayElytraListener oneWayElytraListener;
 
+    private WorldguardFlag wgFlag;
 
-
+    @Override
+    public void onLoad() {
+        WorldguardFlag.onLoad();
+        ccs.sendMessage(prefix + " successfully registered!");
+    }
 
     @Override
     public void onEnable() {
@@ -42,7 +47,6 @@ public final class OneWayElytra extends JavaPlugin {
         registerCommands();
         ccs.sendMessage(prefix + "Commands successfully registered!");
 
-        //getFm().getConfig().set("positions", Arrays.asList("farmworld_nether,0,50,0", "farmworld,0,0,0"));
         getFm().saveYamls();
         oneWayElytraListener.loadPositions();
 
