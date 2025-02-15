@@ -1,14 +1,15 @@
 package de.philippstamp.oneWayElytra;
 
-import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
 import de.philippstamp.oneWayElytra.commands.OneWayElytraCMD;
 import de.philippstamp.oneWayElytra.listeners.OneWayElytraListener;
 import de.philippstamp.oneWayElytra.managers.FileManager;
 import de.philippstamp.oneWayElytra.utils.Tools;
-import de.philippstamp.oneWayElytra.utils.WorldguardFlag;
+import de.philippstamp.oneWayElytra.utils.WorldguardFlags;
+import de.philippstamp.oneWayElytra.utils.WorldguardUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.event.EventHandler;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -25,12 +26,11 @@ public final class OneWayElytra extends JavaPlugin {
 
     private OneWayElytraListener oneWayElytraListener;
 
-    private WorldguardFlag wgFlag;
+    private WorldguardFlags wgFlag;
 
     @Override
     public void onLoad() {
-        WorldguardFlag.onLoad();
-        ccs.sendMessage(prefix + " successfully registered!");
+        connectToWorldguard();
     }
 
     @Override
@@ -96,5 +96,23 @@ public final class OneWayElytra extends JavaPlugin {
     public void registerCommands() {
         //Objects.requireNonNull(getCommand("onewayelytra")).setExecutor(new OneWayElytraCMD(Instance));
         getCommand("onewayelytra").setExecutor(new OneWayElytraCMD(Instance));
+    }
+
+    public void connectToWorldguard(){
+        Plugin worldGuard = pluginManager.getPlugin("WorldGuard");
+        /*
+        if(worldGuard != null && worldGuard.isEnabled()){
+            WorldguardFlags.load();
+            ccs.sendMessage("[OneWayElytra] Successfully connected to WorldGuard!");
+        } else {
+            ccs.sendMessage("[OneWayElytra] Worldguard not found.");
+        }
+        */
+        if(WorldguardUtils.isWorldGuardInstalled()){
+            WorldguardFlags.load();
+            ccs.sendMessage("[OneWayElytra] Successfully connected to WorldGuard!");
+        } else {
+            ccs.sendMessage("[OneWayElytra] Worldguard not found.");
+        }
     }
 }

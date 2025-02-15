@@ -10,9 +10,8 @@ import com.sk89q.worldguard.protection.regions.RegionContainer;
 import com.sk89q.worldguard.protection.regions.RegionQuery;
 import de.philippstamp.oneWayElytra.OneWayElytra;
 import de.philippstamp.oneWayElytra.utils.ActionBar;
-import de.philippstamp.oneWayElytra.utils.ElytraRegion;
-import de.philippstamp.oneWayElytra.utils.WorldguardFlag;
-import org.antlr.v4.tool.Alternative;
+import de.philippstamp.oneWayElytra.utils.WorldguardFlags;
+import de.philippstamp.oneWayElytra.utils.WorldguardUtils;
 import org.bukkit.*;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.EntityType;
@@ -89,16 +88,18 @@ public class OneWayElytraListener implements Listener {
             }
              */
             for (Player player : Bukkit.getOnlinePlayers()) {
-                com.sk89q.worldedit.util.Location loc = BukkitAdapter.adapt(player.getLocation());
-                RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
-                RegionQuery query = container.createQuery();
-                ApplicableRegionSet set = query.getApplicableRegions(loc);
-                LocalPlayer localPlayer = WorldGuardPlugin.inst().wrapPlayer(player);
-                for (ProtectedRegion region : set) {
-                    if(set.testState(null, WorldguardFlag.ONEWAYELYTRA)){
-                        if (player.getGameMode() == GameMode.SURVIVAL) {
-                            if(!playersFlying.contains(player)){
-                                player.setAllowFlight(true);
+                if(WorldguardUtils.isWorldGuardInstalled() == true){
+                    com.sk89q.worldedit.util.Location loc = BukkitAdapter.adapt(player.getLocation());
+                    RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
+                    RegionQuery query = container.createQuery();
+                    ApplicableRegionSet set = query.getApplicableRegions(loc);
+                    LocalPlayer localPlayer = WorldGuardPlugin.inst().wrapPlayer(player);
+                    for (ProtectedRegion region : set) {
+                        if(set.testState(null, WorldguardFlags.ONEWAYELYTRA)){
+                            if (player.getGameMode() == GameMode.SURVIVAL) {
+                                if(!playersFlying.contains(player)){
+                                    player.setAllowFlight(true);
+                                }
                             }
                         }
                     }
@@ -157,7 +158,7 @@ public class OneWayElytraListener implements Listener {
         ApplicableRegionSet set = query.getApplicableRegions(loc);
         LocalPlayer localPlayer = WorldGuardPlugin.inst().wrapPlayer(player);
         for (ProtectedRegion region : set) {
-            if (set.testState(null, WorldguardFlag.ONEWAYELYTRA)) {
+            if (set.testState(null, WorldguardFlags.ONEWAYELYTRA)) {
                 return true;
             }
         }

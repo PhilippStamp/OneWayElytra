@@ -12,15 +12,15 @@ import com.sk89q.worldguard.session.MoveType;
 import com.sk89q.worldguard.session.Session;
 import com.sk89q.worldguard.session.handler.FlagValueChangeHandler;
 
-public class WorldguardFlag extends FlagValueChangeHandler {
+public class WorldguardFlags extends FlagValueChangeHandler {
 
-    protected WorldguardFlag(Session session, Flag flag) {
+    protected WorldguardFlags(Session session, Flag flag) {
         super(session, flag);
     }
 
     public static StateFlag ONEWAYELYTRA ;
 
-    public static void onLoad(){
+    public static void load(){
         FlagRegistry registry = WorldGuard.getInstance().getFlagRegistry();
         try {
             // create a flag with the name "my-custom-flag", defaulting to true
