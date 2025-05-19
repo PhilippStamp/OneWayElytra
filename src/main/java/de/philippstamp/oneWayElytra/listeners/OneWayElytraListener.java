@@ -39,7 +39,7 @@ public class OneWayElytraListener implements Listener {
         if(world != null) {
             Bukkit.getScheduler().runTaskTimer(oneWayElytra, () -> {
                 Bukkit.getWorld(oneWayElytra.getFm().getConfig().getString("location.world")).getPlayers().forEach(player -> {
-                    if (player.getGameMode() == GameMode.SURVIVAL) {
+                    if (player.getGameMode() == GameMode.SURVIVAL || player.getGameMode() == GameMode.ADVENTURE ){
                         player.setAllowFlight(playerInRadius(player));
                         if (playersFlying.contains(player) && !player.getLocation().getBlock().getRelative(BlockFace.DOWN).getType().isAir()) {
                             player.setAllowFlight(false);
