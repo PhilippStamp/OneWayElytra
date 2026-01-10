@@ -1,10 +1,15 @@
 ##
-## OneWayElytra | language.yml
+## OneWayElytra | EN.yml
 ##
+
+# Do not change anything unless you know what you are doing!
+config-version: 1
 
 prefix: '&5OWE &f» '
 commandDenied: '&cYou are not allowed to execute this command!'
-locationSet: '&7You set the location &asuccessfully&7.'
+locationSet: '&7You set &athe location &asuccessfully&7.'
+locationRemoved: '&7You &cdeleted &7the location &asuccessfully&7.'
+locationNotFound: '&cThis location does not exist!'
 radiusSet: '&7You set the radius to &a%radius%&7.'
 boostMultiplierSet: '&7You set the boostmultiplier to &a%multiplier%&7.'
 wrongArgs: '&cYou tried to use wrong arguments. Please check &4/onewayelytra&c.'

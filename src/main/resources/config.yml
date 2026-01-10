@@ -2,14 +2,31 @@
 ## OneWayElytra | config.yml
 ##
 
+# Do not change anything unless you know what you are doing!
+config-version: 1
+
+# Available languages (stored inside the jar-file): EN, DE
+language: EN
+
 ## radius in blocks
 radius: 16
 
+defaultRadius:
+  horizontal: 16
+  vertical: 10
+
 boostMultiplier: 5
 
-## location
-location:
-  world: world
-  x: 0
-  y: 0
-  z: 0
+locations:
+  name:
+    world:
+    x:
+    y:
+    z:
+    radius:
+  name2:
+    world:
+    x:
+    y:
+    z:
+    radius:
