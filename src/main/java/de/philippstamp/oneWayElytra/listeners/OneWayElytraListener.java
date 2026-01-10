@@ -131,10 +131,14 @@ public class OneWayElytraListener implements Listener {
         if(isAllowedToFly(player)){
             // Spieler darf fliegen → alles okay
             event.setCancelled(true);
+            event.getPlayer().setAllowFlight(true);
             event.getPlayer().setGliding(true);
             playersFlying.add(event.getPlayer());
             ActionBar.send(event.getPlayer(), oneWayElytra.getTools().replaceVariables(oneWayElytra.getFileManager().getMessages().getString("boostMessage")));
             player.sendMessage("§aDu darfst fliegen!");
+            Bukkit.getScheduler().runTaskLater(oneWayElytra, () -> {
+                player.setAllowFlight(false);
+            }, 1L);
         }
     }
 
