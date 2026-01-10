@@ -19,31 +19,35 @@ public class OneWayElytraCMD implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if(sender instanceof Player player){
             if(player.hasPermission("onewayelytra.command")){
+                if(args.length == 5) {
+                    // /onewayelytra location <set> [name] <radius> [number]
+                   if(args[0].equalsIgnoreCase("location")){
+                       if(args[1].equalsIgnoreCase("set")){
+                           String locationName = args[2];
+                           if(oneWayElytra.getFileManager().getConfig().getSection("locations").contains(locationName)) {
+                               if (args[3].equalsIgnoreCase("radius")){
+                                   try {
+                                       int radius = Integer.parseInt(args[4]);
+                                       if(radius >= 0){
+                                           oneWayElytra.getFileManager().getConfig().set("locations." + locationName + ".radius", radius);
+                                           oneWayElytra.getFileManager().saveConfig();
+                                           player.sendMessage(oneWayElytra.prefix + oneWayElytra.getTools().replaceVariables(oneWayElytra.getFileManager().getMessages().getString("radiusSet"), Integer.valueOf(args[4]), locationName));
+                                           oneWayElytra.getRadiusManager().loadAreas(oneWayElytra.getFileManager().getConfig());
+                                       } else {
+                                           sender.sendMessage(oneWayElytra.prefix + oneWayElytra.getTools().replaceVariables(oneWayElytra.getFileManager().getMessages().getString("valueMustBeHigherOrEqual")));
+                                       }
+                                   } catch(NumberFormatException e){
+                                       sender.sendMessage(oneWayElytra.prefix + oneWayElytra.getTools().replaceVariables(oneWayElytra.getFileManager().getMessages().getString("valueMustBeInt")));
+                                   }
+                               }
+                           }
+                       }
+                   }                 }
                 if(args.length == 4) {
                     player.sendMessage(oneWayElytra.prefix + oneWayElytra.getTools().replaceVariables(oneWayElytra.getFileManager().getMessages().getString("wrongArgs")));
                 }
                 if (args.length == 3){
-                    if(args[0].equalsIgnoreCase("set")) {
-                        if (args[1].equalsIgnoreCase("radius")) {
-                            if (!args[2].isEmpty() && oneWayElytra.tools.isInt(args[2])) {
-                                oneWayElytra.getFileManager().getConfig().set("radius", Integer.valueOf(args[2]));
-                                //oneWayElytra.getFileManager().saveYamls();
-                                player.sendMessage(oneWayElytra.prefix + oneWayElytra.getTools().replaceVariables(oneWayElytra.getFileManager().getMessages().getString("radiusSet"), Integer.valueOf(args[2])));
-                            } else {
-                                player.sendMessage(oneWayElytra.prefix + oneWayElytra.getTools().replaceVariables(oneWayElytra.getFileManager().getMessages().getString("wrongArgs")));
-                            }
-                        } else if (args[1].equalsIgnoreCase("boost")) {
-                            if (!args[2].isEmpty() && oneWayElytra.tools.isInt(args[2])) {
-                                oneWayElytra.getFileManager().getConfig().set("boostMultiplier", Integer.valueOf(args[2]));
-                                //oneWayElytra.getFileManager().saveYamls();
-                                player.sendMessage(oneWayElytra.prefix + oneWayElytra.getTools().replaceVariables(oneWayElytra.getFileManager().getMessages().getString("boostMultiplierSet"), Integer.valueOf(args[2])));
-                            } else {
-                                player.sendMessage(oneWayElytra.prefix + oneWayElytra.getTools().replaceVariables(oneWayElytra.getFileManager().getMessages().getString("wrongArgs")));
-                            }
-                        } else {
-                            player.sendMessage(oneWayElytra.prefix + oneWayElytra.getTools().replaceVariables(oneWayElytra.getFileManager().getMessages().getString("wrongArgs")));
-                        }
-                    } else if(args[0].equalsIgnoreCase("location")){
+                    if(args[0].equalsIgnoreCase("location")){
                         if (args[1].equalsIgnoreCase("add")){
                             if(args[2] != null){
                                 String locationName = args[2];
@@ -55,24 +59,19 @@ public class OneWayElytraCMD implements CommandExecutor {
                                     oneWayElytra.getFileManager().getConfig().set("locations." + locationName + ".radius", oneWayElytra.getFileManager().getConfig().getInt("radius"));
                                     oneWayElytra.getFileManager().saveConfig();
                                     oneWayElytra.getRadiusManager().loadAreas(oneWayElytra.getFileManager().getConfig());
-                                    //oneWayElytra.getFm().getConfig().set("locations." + locationName + ".boostMultiplier", oneWayElytra.getFm().getConfig().getInt("boostMultiplier"));
-                                    //oneWayElytra.getFileManager().saveYamls();
-                                    player.sendMessage(oneWayElytra.prefix + oneWayElytra.getTools().replaceVariables(oneWayElytra.getFileManager().getMessages().getString("locationSet")));
+                                    player.sendMessage(oneWayElytra.prefix + oneWayElytra.getTools().replaceVariables(oneWayElytra.getFileManager().getMessages().getString("locationSet"), locationName));
                                 } else{
                                     player.sendMessage(oneWayElytra.prefix + oneWayElytra.getTools().replaceVariables(oneWayElytra.getFileManager().getMessages().getString("locationNotFound")));
                                 }
                             }
-                        } else if (args[1].equalsIgnoreCase("remove")){
+                        } else if (args[1].equalsIgnoreCase("remove") || args[1].equalsIgnoreCase("delete")){
                             if(args[2] != null){
                                 String locationName = args[2];
-                                //if(true) { // Check if Location exists
-                                if(oneWayElytra.getFileManager().getConfig().getSection("locations").contains(locationName)) { // Check if Location exists
-                                    //oneWayElytra.getFileManager().getConfig().set("locations." + locationName, null);
+                                if(oneWayElytra.getFileManager().getConfig().getSection("locations").contains(locationName)) {
                                     oneWayElytra.getFileManager().getConfig().remove("locations." + locationName);
                                     oneWayElytra.getFileManager().saveConfig();
                                     oneWayElytra.getRadiusManager().loadAreas(oneWayElytra.getFileManager().getConfig());
-                                    //oneWayElytra.getFileManager().saveYamls();
-                                    player.sendMessage(oneWayElytra.prefix + oneWayElytra.getTools().replaceVariables(oneWayElytra.getFileManager().getMessages().getString("locationRemoved")));
+                                    player.sendMessage(oneWayElytra.prefix + oneWayElytra.getTools().replaceVariables(oneWayElytra.getFileManager().getMessages().getString("locationRemoved"), locationName));
                                 } else{
                                     player.sendMessage(oneWayElytra.prefix + oneWayElytra.getTools().replaceVariables(oneWayElytra.getFileManager().getMessages().getString("locationNotFound")));
                                 }
@@ -80,19 +79,6 @@ public class OneWayElytraCMD implements CommandExecutor {
                         } else {
                             player.sendMessage(oneWayElytra.prefix + oneWayElytra.getTools().replaceVariables(oneWayElytra.getFileManager().getMessages().getString("wrongArgs")));
                         }
-                        /*
-                        if (args[1].equalsIgnoreCase("add")){
-                            oneWayElytra.getFm().getConfig().set("location.world", player.getWorld().getName());
-                            oneWayElytra.getFm().getConfig().set("location.x", player.getLocation().getX());
-                            oneWayElytra.getFm().getConfig().set("location.y", player.getLocation().getY());
-                            oneWayElytra.getFm().getConfig().set("location.z", player.getLocation().getZ());
-                            oneWayElytra.getFm().saveYamls();
-                            player.sendMessage(oneWayElytra.prefix + oneWayElytra.getTools().replaceVariables(oneWayElytra.getFm().getMessages().getString("locationSet")));
-                        } else {
-                            player.sendMessage(oneWayElytra.prefix + oneWayElytra.getTools().replaceVariables(oneWayElytra.getFm().getMessages().getString("wrongArgs")));
-                        }
-                        */
-
                     } else {
                         player.sendMessage(oneWayElytra.prefix + oneWayElytra.getTools().replaceVariables(oneWayElytra.getFileManager().getMessages().getString("wrongArgs")));
                     }
@@ -101,6 +87,17 @@ public class OneWayElytraCMD implements CommandExecutor {
                 if(args.length == 2){
                     if(args[0].equalsIgnoreCase("location")){
                         if (args[1].equalsIgnoreCase("list")){
+                            for(Object locName : oneWayElytra.getFileManager().getConfig().getSection("locations").getKeys()) {
+                                // Werte auslesen
+                                String world = oneWayElytra.getFileManager().getConfig().getString("locations." + locName + ".world");
+                                double x = oneWayElytra.getFileManager().getConfig().getDouble("locations." + locName + ".x");
+                                double y = oneWayElytra.getFileManager().getConfig().getDouble("locations." + locName + ".y");
+                                double z = oneWayElytra.getFileManager().getConfig().getDouble("locations." + locName + ".z");
+                                double radius = oneWayElytra.getFileManager().getConfig().getDouble("locations." + locName + ".radius");
+
+                                // Spieler ausgeben
+                                player.sendMessage("§e" + locName + " §7→ " + oneWayElytra.getFileManager().getMessages().getString("world") + ": §a" + world + " §7X: §a" + x + " §7Y: §a" + y + " §7Z: §a" + z + " §7" + oneWayElytra.getFileManager().getMessages().getString("radius") + ": §a" + radius);
+                            }
 
                         } else {
                             player.sendMessage(oneWayElytra.prefix + oneWayElytra.getTools().replaceVariables(oneWayElytra.getFileManager().getMessages().getString("wrongArgs")));
@@ -110,14 +107,12 @@ public class OneWayElytraCMD implements CommandExecutor {
                     }
                 }
                 if (args.length == 1){
-                    if(args[0].equalsIgnoreCase("set")){
-                        player.sendMessage(oneWayElytra.prefix + oneWayElytra.getTools().replaceVariables(oneWayElytra.getFileManager().getMessages().getString("wrongArgs")));
-                    } else {
-                        player.sendMessage(oneWayElytra.prefix + oneWayElytra.getTools().replaceVariables(oneWayElytra.getFileManager().getMessages().getString("wrongArgs")));
-                    }
+                    player.sendMessage(oneWayElytra.prefix + oneWayElytra.getTools().replaceVariables(oneWayElytra.getFileManager().getMessages().getString("wrongArgs")));
                 }
                 if (args.length == 0){
-                    player.sendMessage(oneWayElytra.prefix + "§7/onewayelytra set <location/radius/boost> [radius/boost]");
+                    player.sendMessage(oneWayElytra.prefix + "§7/onewayelytra location <add/delete> [name]");
+                    player.sendMessage(oneWayElytra.prefix + "§7/onewayelytra location <set> [name] <radius> [number]");
+                    player.sendMessage(oneWayElytra.prefix + "§7/onewayelytra location <list>");
                 }
             } else {
                 player.sendMessage(oneWayElytra.prefix + oneWayElytra.getTools().replaceVariables(oneWayElytra.getFileManager().getMessages().getString("commandDenied")));
