@@ -19,6 +19,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityToggleGlideEvent;
 import org.bukkit.event.player.*;
 
 import java.util.ArrayList;
@@ -51,7 +52,7 @@ public class OneWayElytraListener implements Listener {
 
                     boolean wgAllowed = set.testState(localPlayer, WorldguardFlags.ONEWAYELYTRA);
                     boolean inRadiusArea = oneWayElytra.getRadiusManager().isInAnyArea(player.getLocation());
-
+/*
                     if ((wgAllowed || inRadiusArea)
                             && player.getGameMode() == GameMode.SURVIVAL
                             && !playersFlying.contains(player)
@@ -59,6 +60,15 @@ public class OneWayElytraListener implements Listener {
 
                         player.setAllowFlight(true);
                     }
+
+ */
+
+                    if ((wgAllowed || inRadiusArea) && !playersFlying.contains(player) && player.isOnGround()) {
+                        if(player.getGameMode() == GameMode.SURVIVAL || player.getGameMode() == GameMode.ADVENTURE && oneWayElytra.getFileManager().getConfig().getBoolean("adventure")) {
+                            player.setAllowFlight(true);
+                        }
+                    }
+
                 }
 
 
@@ -71,7 +81,6 @@ public class OneWayElytraListener implements Listener {
 
                         Bukkit.getScheduler().runTaskLater(oneWayElytra, () -> {
                             playersFlying.remove(player);
-                            player.sendMessage("Removed");
                             player.setAllowFlight(false);
                         }, 5);
                     }
@@ -84,17 +93,19 @@ public class OneWayElytraListener implements Listener {
     public void onToggleFlight(PlayerToggleFlightEvent event){
         Player player = event.getPlayer();
 
-        if(player.getGameMode() != GameMode.SURVIVAL) return;
-
-        if(isAllowedToFly(player)){
-            event.setCancelled(true);
-            event.getPlayer().setGliding(true);
-            playersFlying.add(event.getPlayer());
-            ActionBar.send(event.getPlayer(), oneWayElytra.getTools().replaceVariables(oneWayElytra.getFileManager().getMessages().getString("boostMessage")));
-            Bukkit.getScheduler().runTaskLater(oneWayElytra, () -> {
-                player.setAllowFlight(false);
-            }, 1L);
+        if(player.getGameMode().equals(GameMode.SURVIVAL) || player.getGameMode().equals(GameMode.ADVENTURE)) {
+            if(isAllowedToFly(player)){
+                event.setCancelled(true);
+                event.getPlayer().setGliding(true);
+                playersFlying.add(event.getPlayer());
+                ActionBar.send(event.getPlayer(), oneWayElytra.getTools().replaceVariables(oneWayElytra.getFileManager().getMessages().getString("boostMessage")));
+                Bukkit.getScheduler().runTaskLater(oneWayElytra, () -> {
+                    player.setAllowFlight(false);
+                }, 1L);
+            }
         }
+
+
     }
 
     public boolean isAllowedToFly(Player player) {
@@ -118,11 +129,8 @@ public class OneWayElytraListener implements Listener {
     public void onEntityDamage(EntityDamageEvent event){
         if(event.getEntityType() == EntityType.PLAYER){
             Player player = (Player) event.getEntity();
-            player.sendMessage("0");
             if(playersFlying.contains(event.getEntity())){
-                player.sendMessage("1");
                 if(event.getCause() == EntityDamageEvent.DamageCause.FALL){
-                    player.sendMessage("2");
                     event.setCancelled(true);
                 } else if(event.getCause() == EntityDamageEvent.DamageCause.FLY_INTO_WALL){
                     event.setCancelled(true);
@@ -147,13 +155,11 @@ public class OneWayElytraListener implements Listener {
         }
     }
 
-/*
+
     @EventHandler
     public void onEntityGlide(EntityToggleGlideEvent event){
         if (event.getEntityType() == EntityType.PLAYER && playersFlying.contains(event.getEntity())) event.setCancelled(true);
     }
-
- */
 
 
 
