@@ -1,18 +1,29 @@
+
 # OneWayElytra
 Do you wanna fly into the air? Even without ever entering the end? This plugin adds a one-way-elytra for your spawn. Players are able to fly into the air and boost once they are in the air.
 
-### Features
+## Features
 - 🪽 fly into the air without an elytra
 - 🚀 boost once while flying
+- ▦ worldguard flag
 
-### Commands
+## Commands
 **/onewayelytra | /owe**
 _Shows you all the commands._
 
-**/onewayelytra set <location/radius/boost> [radius/boost]**
-_Sets the center for the startarea. Set the radius for this area._
+**/onewayelytra location <add/delete> [name]**
+_Add or delete a location._
 
-### Configurations
+**/onewayelytra location set [name] radius [number]**
+_Set the locations radius._
+
+**/onewayelytra location list**
+_List all locations._
+
+## Worldguard
+**/rg flag [regionname] onewayelytra allow**
+_Set the flag for a specifig region._
+## Configurations
 
 <details>
 <summary>config.yml</summary>
@@ -22,17 +33,22 @@ _Sets the center for the startarea. Set the radius for this area._
 ## OneWayElytra | config.yml
 ##
 
-## radius in blocks
-radius: 12
+# Do not change anything unless you know what you are doing!
+config-version: 1
 
+# Available languages (stored inside the jar-file): EN, DE
+language: EN
+
+# default radius in blocks
+radius: 16
+
+# multiplier for the boost (standard: 5)
 boostMultiplier: 5
 
-## location
-location:
-  world: world
-  x: 0
-  y: 300
-  z: 0
+# allow gliding in adventure mode
+adventure: true
+
+locations: {}
 ```
 
 
