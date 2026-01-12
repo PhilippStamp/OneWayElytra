@@ -1,0 +1,19 @@
+##
+## OneWayElytra | DEyml
+##
+
+# Do not change anything unless you know what you are doing!
+config-version: 1
+
+prefix: '&5OWE &f» '
+commandDenied: '&cDu darfst diesen Befehl nicht verwenden'
+locationSet: '&7Du hast die &7die Position &e%location% &7erfolgreich &agesetzt&7.'
+locationRemoved: '&7Du hast die &7die Position &e%location% &7erfolgreich &cgelöscht&7.'
+locationNotFound: '&cDiese Position gibt es nicht'
+radiusSet: '&7Du hast den Radius von &e%location% &7auf &e%radius% &7gesetzt.'
+wrongArgs: '&cDu hast falsche Argumente verwendet. Verwende &4/onewayelytra&c.'
+boostMessage: '&7Klicken, um einen Boost zu erhalten.'
+world: 'Welt'
+radius: 'Radius'
+valueMustBeInt: '&cDu musst eine Zahl eingeben.'
+valueMustBeHigherOrEqual: '&cDer Wert muss höher oder gleich 0 sein.'

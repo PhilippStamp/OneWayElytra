@@ -1,13 +1,16 @@
 package de.philippstamp.oneWayElytra.listeners;
 
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldguard.LocalPlayer;
+import com.sk89q.worldguard.WorldGuard;
+import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
+import com.sk89q.worldguard.protection.ApplicableRegionSet;
+import com.sk89q.worldguard.protection.regions.RegionContainer;
+import com.sk89q.worldguard.protection.regions.RegionQuery;
 import de.philippstamp.oneWayElytra.OneWayElytra;
 import de.philippstamp.oneWayElytra.utils.ActionBar;
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.ComponentBuilder;
-import net.md_5.bungee.api.chat.KeybindComponent;
-import net.md_5.bungee.api.chat.TextComponent;
+import de.philippstamp.oneWayElytra.utils.WorldguardFlags;
+import de.philippstamp.oneWayElytra.utils.WorldguardUtils;
 import org.bukkit.*;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.EntityType;
@@ -29,50 +32,103 @@ public class OneWayElytraListener implements Listener {
     private List<Player> playersFlying = new ArrayList<>();
     private List<Player> playersBoosted = new ArrayList<>();
 
+    private List<Location> positions = new ArrayList<>();
+
     private OneWayElytra oneWayElytra;
 
     public OneWayElytraListener(OneWayElytra oneWayElytra){
         this.oneWayElytra = oneWayElytra;
-        this.radius = oneWayElytra.getFm().getConfig().getInt("radius");
-        String worldName;
-        World world = Bukkit.getWorld(oneWayElytra.getFm().getConfig().getString("location.world"));
-        if(world != null) {
-            Bukkit.getScheduler().runTaskTimer(oneWayElytra, () -> {
-                Bukkit.getWorld(oneWayElytra.getFm().getConfig().getString("location.world")).getPlayers().forEach(player -> {
-                    if (player.getGameMode() == GameMode.SURVIVAL || player.getGameMode() == GameMode.ADVENTURE ){
-                        player.setAllowFlight(playerInRadius(player));
-                        if (playersFlying.contains(player) && !player.getLocation().getBlock().getRelative(BlockFace.DOWN).getType().isAir()) {
-                            player.setAllowFlight(false);
-                            player.setGliding(false);
-                            playersBoosted.remove(player);
+        this.radius = oneWayElytra.getFileManager().getConfig().getInt("radius");
+        Bukkit.getScheduler().runTaskTimer(oneWayElytra, () -> {
 
-                            Bukkit.getScheduler().runTaskLater(oneWayElytra, () -> {
-                                playersFlying.remove(player);
-                            }, 5);
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                if(WorldguardUtils.isWorldGuardInstalled()){
+
+                    com.sk89q.worldedit.util.Location loc = BukkitAdapter.adapt(player.getLocation());
+                    RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
+                    RegionQuery query = container.createQuery();
+                    ApplicableRegionSet set = query.getApplicableRegions(loc);
+                    LocalPlayer localPlayer = WorldGuardPlugin.inst().wrapPlayer(player);
+
+                    boolean wgAllowed = set.testState(localPlayer, WorldguardFlags.ONEWAYELYTRA);
+                    boolean inRadiusArea = oneWayElytra.getRadiusManager().isInAnyArea(player.getLocation());
+/*
+                    if ((wgAllowed || inRadiusArea)
+                            && player.getGameMode() == GameMode.SURVIVAL
+                            && !playersFlying.contains(player)
+                            && player.isOnGround()) {
+
+                        player.setAllowFlight(true);
+                    }
+
+ */
+
+                    if ((wgAllowed || inRadiusArea) && !playersFlying.contains(player) && player.isOnGround()) {
+                        if(player.getGameMode() == GameMode.SURVIVAL || player.getGameMode() == GameMode.ADVENTURE && oneWayElytra.getFileManager().getConfig().getBoolean("adventure")) {
+                            player.setAllowFlight(true);
                         }
                     }
 
-                });
-            }, 0, 3);
-        }
+                }
 
+
+                if (player.getGameMode() == GameMode.SURVIVAL || player.getGameMode() == GameMode.ADVENTURE) {
+                    if (playersFlying.contains(player)
+                            && !player.getLocation().getBlock().getRelative(BlockFace.DOWN).getType().isAir()) {
+
+                        player.setGliding(false);
+                        playersBoosted.remove(player);
+
+                        Bukkit.getScheduler().runTaskLater(oneWayElytra, () -> {
+                            playersFlying.remove(player);
+                            player.setAllowFlight(false);
+                        }, 5);
+                    }
+                }
+            }
+        }, 0, 3);
     }
 
     @EventHandler
-    public void onToogleFlight(PlayerToggleFlightEvent event){
-        if(event.getPlayer().getGameMode() == GameMode.SURVIVAL){
-            if (playerInRadius(event.getPlayer())){
+    public void onToggleFlight(PlayerToggleFlightEvent event){
+        Player player = event.getPlayer();
+
+        if(player.getGameMode().equals(GameMode.SURVIVAL) || player.getGameMode().equals(GameMode.ADVENTURE)) {
+            if(isAllowedToFly(player)){
                 event.setCancelled(true);
                 event.getPlayer().setGliding(true);
                 playersFlying.add(event.getPlayer());
-                ActionBar.send(event.getPlayer(), oneWayElytra.getTools().replaceVariables(oneWayElytra.getFm().getMessages().getString("boostMessage")));
+                ActionBar.send(event.getPlayer(), oneWayElytra.getTools().replaceVariables(oneWayElytra.getFileManager().getMessages().getString("boostMessage")));
+                Bukkit.getScheduler().runTaskLater(oneWayElytra, () -> {
+                    player.setAllowFlight(false);
+                }, 1L);
             }
         }
+
+
+    }
+
+    public boolean isAllowedToFly(Player player) {
+        boolean wgAllowed = false;
+        if (WorldguardUtils.isWorldGuardInstalled()) {
+            com.sk89q.worldedit.util.Location loc = BukkitAdapter.adapt(player.getLocation());
+            RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
+            RegionQuery query = container.createQuery();
+            ApplicableRegionSet set = query.getApplicableRegions(loc);
+            LocalPlayer localPlayer = WorldGuardPlugin.inst().wrapPlayer(player);
+
+            wgAllowed = set.testState(localPlayer, WorldguardFlags.ONEWAYELYTRA);
+        }
+
+        boolean inRadiusArea = oneWayElytra.getRadiusManager().isInAnyArea(player.getLocation());
+
+        return wgAllowed || inRadiusArea;
     }
 
     @EventHandler
     public void onEntityDamage(EntityDamageEvent event){
         if(event.getEntityType() == EntityType.PLAYER){
+            Player player = (Player) event.getEntity();
             if(playersFlying.contains(event.getEntity())){
                 if(event.getCause() == EntityDamageEvent.DamageCause.FALL){
                     event.setCancelled(true);
@@ -86,7 +142,7 @@ public class OneWayElytraListener implements Listener {
     @EventHandler
     public void onBoost(PlayerInteractEvent event){
         if (!playersBoosted.contains(event.getPlayer()) && playersFlying.contains(event.getPlayer())) {
-            this.boostMultiplier = oneWayElytra.getFm().getConfig().getInt("boostMultiplier");
+            this.boostMultiplier = oneWayElytra.getFileManager().getConfig().getInt("boostMultiplier");
             if(event.getAction().equals(Action.LEFT_CLICK_AIR)){
                 event.setCancelled(true);
                 playersBoosted.add(event.getPlayer());
@@ -99,15 +155,16 @@ public class OneWayElytraListener implements Listener {
         }
     }
 
+
     @EventHandler
     public void onEntityGlide(EntityToggleGlideEvent event){
         if (event.getEntityType() == EntityType.PLAYER && playersFlying.contains(event.getEntity())) event.setCancelled(true);
     }
 
 
+
     @EventHandler
     public void onPlayerTeleport(PlayerTeleportEvent event) {
-        Player player = event.getPlayer();
         World fromWorld = event.getFrom().getWorld();
         World toWorld = event.getTo().getWorld();
 
@@ -119,24 +176,6 @@ public class OneWayElytraListener implements Listener {
         }
     }
 
-    private boolean playerInRadius(Player player){
-        String worldName;
-        World world = Bukkit.getWorld(oneWayElytra.getFm().getConfig().getString("location.world"));
-        if(world != null){
-            if(player.getWorld().getName().equals(oneWayElytra.getFm().getConfig().getString("location.world"))){
-                Location location = new Location(
-                        Bukkit.getWorld(oneWayElytra.getFm().getConfig().getString("location.world")),
-                        oneWayElytra.getFm().getConfig().getInt("location.x"),
-                        oneWayElytra.getFm().getConfig().getInt("location.y"),
-                        oneWayElytra.getFm().getConfig().getInt("location.z"));
-                return location.distance(player.getLocation()) <= radius;
-            } else {
-                return false;
-            }
-        }
-
-        return false;
-    }
 
 
 }

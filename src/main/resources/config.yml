@@ -2,14 +2,19 @@
 ## OneWayElytra | config.yml
 ##
 
-## radius in blocks
+# Do not change anything unless you know what you are doing!
+config-version: 1
+
+# Available languages (stored inside the jar-file): EN, DE
+language: EN
+
+# default radius in blocks
 radius: 16
 
+# multiplier for the boost (standard: 5)
 boostMultiplier: 5
 
-## location
-location:
-  world: world
-  x: 0
-  y: 0
-  z: 0
+# allow gliding in adventure mode
+adventure: true
+
+locations: {}

@@ -1,76 +1,112 @@
-/*
- * Created by Philipp A. Stamp
- * Date: 08. Jul 2019
- */
 package de.philippstamp.oneWayElytra.managers;
-
 import de.philippstamp.oneWayElytra.OneWayElytra;
-import org.bukkit.configuration.file.FileConfiguration;
+import dev.dejvokep.boostedyaml.YamlDocument;
+import dev.dejvokep.boostedyaml.dvs.versioning.BasicVersioning;
+import dev.dejvokep.boostedyaml.settings.dumper.DumperSettings;
+import dev.dejvokep.boostedyaml.settings.general.GeneralSettings;
+import dev.dejvokep.boostedyaml.settings.loader.LoaderSettings;
+import dev.dejvokep.boostedyaml.settings.updater.UpdaterSettings;
+import org.bukkit.Bukkit;
+import org.bukkit.command.ConsoleCommandSender;
 
 import java.io.File;
-import java.io.InputStream;
+import java.io.IOException;
+import java.util.Objects;
+
 
 public class FileManager {
-    File cfgFile = new File(OneWayElytra.getInstance().getDataFolder(), "config.yml");
-    FileConfiguration cfg;
 
-    //File msgFile = new File(OneWayElytra.getInstance().getDataFolder(), this.cfg.getString("language") + ".yml");
-    File msgFile = new File(OneWayElytra.getInstance().getDataFolder(), "language.yml");
-    FileConfiguration msg;
+    private OneWayElytra oneWayElytra;
 
-    public void firstRun() throws Exception {
-        if (!this.cfgFile.exists()) {
-            this.cfgFile.getParentFile().mkdirs();
-            copy(OneWayElytra.getInstance().getResource("config.yml"), this.cfgFile);
-        }
-        if (!this.msgFile.exists()) {
-            this.msgFile.getParentFile().mkdirs();
-            //copy(OneWayElytra.getInstance().getResource(getConfig().getString("language") + ".yml"), this.msgFile);
-            copy(OneWayElytra.getInstance().getResource("language.yml"), this.msgFile);
-        }
-    }
+    private ConsoleCommandSender ccs = Bukkit.getServer().getConsoleSender();
 
-    public FileConfiguration getConfig()
-    {
-        return this.cfg;
-    }
+    private static YamlDocument config;
+    private static YamlDocument messages;
+    private static YamlDocument database;
 
-    public FileConfiguration getMessages() {
-        return this.msg;
+    public FileManager(OneWayElytra oneWayElytra) {
+        this.oneWayElytra = oneWayElytra;
     }
 
 
-
-    private void copy(InputStream in, File file) {
+    public void loadConfig(OneWayElytra oneWayElytra) {
         try {
-            java.io.OutputStream out = new java.io.FileOutputStream(file);
-            byte[] buf = new byte['Ѐ'];
-            int len;
-            while ((len = in.read(buf)) > 0) {
-                out.write(buf, 0, len);
+            config = YamlDocument.create(new File(oneWayElytra.getDataFolder(), "config.yml"),
+                    Objects.requireNonNull(getClass().getResourceAsStream("/config.yml")),
+                    GeneralSettings.DEFAULT,
+                    LoaderSettings.builder().setAutoUpdate(true).build(),
+                    DumperSettings.DEFAULT,
+                    UpdaterSettings.builder().setVersioning(new BasicVersioning("config-version"))
+                            .setOptionSorting(UpdaterSettings.OptionSorting.SORT_BY_DEFAULTS).build()
+            );
+            config.update();
+            config.save();
+        } catch (IOException e) {
+            ccs.sendMessage("§cCould not load config.yml. Shutting down this plugin...");
+            Bukkit.getPluginManager().disablePlugin(oneWayElytra);
+        }
+    }
+
+    public void loadDatabase(OneWayElytra oneWayElytra) {
+        try {
+            database = YamlDocument.create(new File(oneWayElytra.getDataFolder(), "database.yml"),
+                    Objects.requireNonNull(getClass().getResourceAsStream("/database.yml")),
+                    GeneralSettings.DEFAULT,
+                    LoaderSettings.builder().setAutoUpdate(true).build(),
+                    DumperSettings.DEFAULT,
+                    UpdaterSettings.builder().setVersioning(new BasicVersioning("config-version"))
+                            .setOptionSorting(UpdaterSettings.OptionSorting.SORT_BY_DEFAULTS).build()
+            );
+            database.update();
+            database.save();
+        } catch (IOException e) {
+            ccs.sendMessage("§cCould not load database.yml. Shutting down this plugin...");
+            Bukkit.getPluginManager().disablePlugin(oneWayElytra);
+        }
+    }
+
+    public void loadMessages(OneWayElytra oneWayElytra) {
+        try {
+            File languagesFolder = new File(oneWayElytra.getDataFolder(), "languages");
+            if (!languagesFolder.exists()) {
+                languagesFolder.mkdirs();
             }
-            out.close();
-            in.close();
-        } catch (Exception e) {
+            messages = YamlDocument.create(new File(languagesFolder, config.getString("language") + ".yml"),
+                    Objects.requireNonNull(getClass().getResourceAsStream("/" + config.getString("language") + ".yml")),
+                    GeneralSettings.DEFAULT,
+                    LoaderSettings.builder().setAutoUpdate(true).build(),
+                    DumperSettings.DEFAULT,
+                    UpdaterSettings.builder().setVersioning(new BasicVersioning("config-version"))
+                            .setOptionSorting(UpdaterSettings.OptionSorting.SORT_BY_DEFAULTS).build()
+            );
+            messages.update();
+            messages.save();
+        } catch (IOException e) {
+            ccs.sendMessage("§cCould not load messages-file. Shutting down this plugin...");
+            Bukkit.getPluginManager().disablePlugin(oneWayElytra);
+        }
+    }
+
+    public void saveConfig() {
+        if (config == null) return;
+        try {
+            config.save();
+        } catch (IOException e) {
+            ccs.sendMessage("§cCould not save config.yml!");
             e.printStackTrace();
         }
     }
 
-    public void loadYamls() {
-        try {
-            this.cfg = org.bukkit.configuration.file.YamlConfiguration.loadConfiguration(this.cfgFile);
-            this.msg = org.bukkit.configuration.file.YamlConfiguration.loadConfiguration(this.msgFile);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
+    public YamlDocument getConfig() {
+        return config;
     }
 
-    public void saveYamls() {
-        try {
-            this.cfg.save(this.cfgFile);
-            this.msg.save(this.msgFile);
-        } catch (java.io.IOException e) {
-            e.printStackTrace();
-        }
+    public YamlDocument getMessages() {
+        return messages;
+    }
+
+    public YamlDocument getDatabase() {
+        return database;
     }
 }

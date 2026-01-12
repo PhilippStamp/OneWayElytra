@@ -24,6 +24,19 @@ public class Tools {
               .replaceAll("%coins%", "⛃");
   }
 
+public String replaceVariables(String text, String location) {
+    return ChatColor.translateAlternateColorCodes('&', text)
+            .replaceAll("%>>%", "»")
+            .replaceAll("%<<%", "«")
+            .replaceAll("%ue%", "ü")
+            .replaceAll("%ae%", "ä")
+            .replaceAll("%oe%", "ö")
+            .replaceAll("%ss%", "ß")
+            .replaceAll("%coin%", "⛂")
+            .replaceAll("%coins%", "⛃")
+            .replaceAll("%location%", location + "");
+}
+
   public String replaceVariables(String text, Integer integer) {
     return ChatColor.translateAlternateColorCodes('&', text)
             .replaceAll("%>>%", "»")
@@ -38,6 +51,22 @@ public class Tools {
             .replaceAll("%multiplier%", integer + "")
             .replaceAll("%boostMultiplier%", integer + "")
             .replaceAll("%boostmultiplier%", integer + "");
+  }
+  public String replaceVariables(String text, Integer integer, String location) {
+        return ChatColor.translateAlternateColorCodes('&', text)
+                .replaceAll("%>>%", "»")
+                .replaceAll("%<<%", "«")
+                .replaceAll("%ue%", "ü")
+                .replaceAll("%ae%", "ä")
+                .replaceAll("%oe%", "ö")
+                .replaceAll("%ss%", "ß")
+                .replaceAll("%coin%", "⛂")
+                .replaceAll("%coins%", "⛃")
+                .replaceAll("%radius%", integer + "")
+                .replaceAll("%multiplier%", integer + "")
+                .replaceAll("%boostMultiplier%", integer + "")
+                .replaceAll("%boostmultiplier%", integer + "")
+                .replaceAll("%location%", location + "");
   }
 
   public String replaceVariables(Player player, String text) {

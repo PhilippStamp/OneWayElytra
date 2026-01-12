@@ -3,10 +3,14 @@ package de.philippstamp.oneWayElytra;
 import de.philippstamp.oneWayElytra.commands.OneWayElytraCMD;
 import de.philippstamp.oneWayElytra.listeners.OneWayElytraListener;
 import de.philippstamp.oneWayElytra.managers.FileManager;
+import de.philippstamp.oneWayElytra.managers.RadiusManager;
 import de.philippstamp.oneWayElytra.utils.Tools;
+import de.philippstamp.oneWayElytra.utils.WorldguardFlags;
+import de.philippstamp.oneWayElytra.utils.WorldguardUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.event.EventHandler;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -16,6 +20,7 @@ public final class OneWayElytra extends JavaPlugin {
 
     public String prefix;
     private FileManager fileManager;
+    private RadiusManager radiusManager;
     public Tools tools;
     PluginManager pluginManager = Bukkit.getPluginManager();
 
@@ -23,15 +28,24 @@ public final class OneWayElytra extends JavaPlugin {
 
     private OneWayElytraListener oneWayElytraListener;
 
+    private WorldguardFlags wgFlag;
 
-
+    @Override
+    public void onLoad() {
+        connectToWorldguard();
+    }
 
     @Override
     public void onEnable() {
         Instance = this;
-        loadFm();
+        fileManager = new FileManager(this);
+        fileManager.loadConfig(Instance);
+        ccs.sendMessage("Config loaded.");
+        radiusManager = new RadiusManager(fileManager.getConfig());
+        fileManager.loadMessages(Instance);
+        ccs.sendMessage("Language loaded: §7" + fileManager.getConfig().getString("language"));
         this.tools = new Tools(this);
-        prefix = this.getTools().replaceVariables(getFm().getMessages().getString("prefix"));
+        prefix = this.getTools().replaceVariables(getFileManager().getMessages().getString("prefix"));
         ccs.sendMessage(prefix + "Enabling...");
 
         registerListener();
@@ -57,21 +71,11 @@ public final class OneWayElytra extends JavaPlugin {
 
     public static OneWayElytra getInstance() {return Instance;}
 
-    private void loadFm() {
-        fileManager = new FileManager();
-        try {
-            fileManager.firstRun();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        fileManager.loadYamls();
-    }
-
     public Tools getTools(){
         return  tools;
     }
 
-    public FileManager getFm() {
+    public FileManager getFileManager() {
         return fileManager;
     }
 
@@ -84,6 +88,20 @@ public final class OneWayElytra extends JavaPlugin {
     @EventHandler
     public void registerCommands() {
         //Objects.requireNonNull(getCommand("onewayelytra")).setExecutor(new OneWayElytraCMD(Instance));
-        getCommand("onewayelytra").setExecutor(new OneWayElytraCMD(Instance));
+        getCommand("onewayelytra").setExecutor(new OneWayElytraCMD(Instance, oneWayElytraListener));
+    }
+
+    public void connectToWorldguard(){
+        Plugin worldGuard = pluginManager.getPlugin("WorldGuard");
+        if(WorldguardUtils.isWorldGuardInstalled()){
+            WorldguardFlags.load();
+            ccs.sendMessage("[OneWayElytra] Successfully connected to WorldGuard!");
+        } else {
+            ccs.sendMessage("[OneWayElytra] Worldguard not found.");
+        }
+    }
+
+    public RadiusManager getRadiusManager() {
+        return radiusManager;
     }
 }
