@@ -1,18 +1,29 @@
+
 # OneWayElytra
 Do you wanna fly into the air? Even without ever entering the end? This plugin adds a one-way-elytra for your spawn. Players are able to fly into the air and boost once they are in the air.
 
-### Features
+## Features
 - 🪽 fly into the air without an elytra
 - 🚀 boost once while flying
+- ▦ worldguard flag
 
-### Commands
+## Commands
 **/onewayelytra | /owe**
 _Shows you all the commands._
 
-**/onewayelytra set <location/radius/boost> [radius/boost]**
-_Sets the center for the startarea. Set the radius for this area._
+**/onewayelytra location <add/delete> [name]**
+_Add or delete a location._
 
-### Configurations
+**/onewayelytra location set [name] radius [number]**
+_Set the locations radius._
+
+**/onewayelytra location list**
+_List all locations._
+
+## Worldguard
+**/rg flag [regionname] onewayelytra allow**
+_Set the flag for a specifig region._
+## Configurations
 
 <details>
 <summary>config.yml</summary>
@@ -22,67 +33,23 @@ _Sets the center for the startarea. Set the radius for this area._
 ## OneWayElytra | config.yml
 ##
 
-## radius in blocks
-radius: 12
+# Do not change anything unless you know what you are doing!
+config-version: 1
 
+# Available languages (stored inside the jar-file): EN, DE
+language: EN
+
+# default radius in blocks
+radius: 16
+
+# multiplier for the boost (standard: 5)
 boostMultiplier: 5
 
-## location
-location:
-  world: world
-  x: 0
-  y: 300
-  z: 0
+# allow gliding in adventure mode
+adventure: true
+
+locations: {}
 ```
 
 
 </details>
-
-
-<details>
-<summary>language.yml | EN</summary>
-
-
-```
-##
-## OneWayElytra | language.yml
-##
-
-prefix: '&5OWE &f» '
-commandDenied: '&cYou are not allowed to execute this command!'
-locationSet: '&7You set the location &asuccessfully&7.'
-radiusSet: '&7You set the radius to &a%radius%&7.'
-boostMultiplierSet: '&7You set the boostmultiplier to &a%multiplier%&7.'
-wrongArgs: '&cYou tried to use wrong arguments. Please check &4/onewayelytra&c.'
-boostMessage: '&7Click into the air to get a boost!'
-
-```
-
-
-</details>
-
-
-<details>
-<summary>language.yml | DE</summary>
-
-
-```
-##
-## OneWayElytra | language.yml
-##
-
-prefix: '&5OWE &f» '
-commandDenied: '&cDu darfst diesen Befehl nicht benutzen.'
-locationSet: '&7Du hast die Position&a erfolgreich &7gesetzt.'
-radiusSet: '&7Du hast den Radius auf &a%radius% Blöcke &7eingestellt.'
-boostMultiplierSet: '&7Du hast den Boostmultiplikator auf &a%multiplier% &7gesetzt.'
-wrongArgs: '&cDu hast einen Fehler bei der Eingabe gemacht. Benutze &4/onewayelytra&c.'
-boostMessage: '&7Schlag in die Luft, um einen Schub zu erhalten.'
-
-```
-
-
-</details>
-
-
-
