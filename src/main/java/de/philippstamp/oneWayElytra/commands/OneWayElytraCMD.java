@@ -111,8 +111,8 @@ public class OneWayElytraCMD implements CommandExecutor {
                 }
                 if (args.length == 0){
                     player.sendMessage(oneWayElytra.prefix + "§7/onewayelytra location <add/delete> [name]");
-                    player.sendMessage(oneWayElytra.prefix + "§7/onewayelytra location <set> [name] <radius> [number]");
-                    player.sendMessage(oneWayElytra.prefix + "§7/onewayelytra location <list>");
+                    player.sendMessage(oneWayElytra.prefix + "§7/onewayelytra location set [name] radius [number]");
+                    player.sendMessage(oneWayElytra.prefix + "§7/onewayelytra location list");
                 }
             } else {
                 player.sendMessage(oneWayElytra.prefix + oneWayElytra.getTools().replaceVariables(oneWayElytra.getFileManager().getMessages().getString("commandDenied")));
