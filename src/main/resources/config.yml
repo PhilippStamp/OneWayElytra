@@ -11,9 +11,10 @@ language: EN
 # default radius in blocks
 radius: 16
 
+# multiplier for the boost (standard: 5)
 boostMultiplier: 5
 
-# allow flying in adventure mode
+# allow gliding in adventure mode
 adventure: true
 
 locations: {}
