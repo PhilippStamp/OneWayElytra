@@ -40,17 +40,15 @@ public final class OneWayElytra extends JavaPlugin {
         Instance = this;
         fileManager = new FileManager(this);
         fileManager.loadConfig(Instance);
-        ccs.sendMessage("Config loaded.");
+        ccs.sendMessage("[OneWayElytra] Config loaded.");
         radiusManager = new RadiusManager(fileManager.getConfig());
         fileManager.loadMessages(Instance);
-        ccs.sendMessage("Language loaded: §7" + fileManager.getConfig().getString("language"));
+        ccs.sendMessage("[OneWayElytra] Language loaded: §7" + fileManager.getConfig().getString("language"));
         this.tools = new Tools(this);
-        prefix = this.getTools().replaceVariables(getFileManager().getMessages().getString("prefix"));
+        prefix = this.getTools().replaceVariables(getFileManager().getMessages().getString("prefix") + " ");
         ccs.sendMessage(prefix + "Enabling...");
-
         registerListener();
         ccs.sendMessage(prefix + "Listeners successfully registered!");
-
         registerCommands();
         ccs.sendMessage(prefix + "Commands successfully registered!");
 

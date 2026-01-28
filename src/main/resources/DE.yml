@@ -3,9 +3,9 @@
 ##
 
 # Do not change anything unless you know what you are doing!
-config-version: 1
+config-version: 2
 
-prefix: '&5OWE &f» '
+prefix: '&5OWE &f»'
 commandDenied: '&cDu darfst diesen Befehl nicht verwenden'
 locationSet: '&7Du hast die &7die Position &e%location% &7erfolgreich &agesetzt&7.'
 locationRemoved: '&7Du hast die &7die Position &e%location% &7erfolgreich &cgelöscht&7.'
