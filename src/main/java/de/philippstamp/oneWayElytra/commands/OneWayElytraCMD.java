@@ -6,6 +6,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.PluginDescriptionFile;
 
 public class OneWayElytraCMD implements CommandExecutor {
 
@@ -118,7 +119,10 @@ public class OneWayElytraCMD implements CommandExecutor {
                 player.sendMessage(oneWayElytra.prefix + oneWayElytra.getTools().replaceVariables(oneWayElytra.getFileManager().getMessages().getString("commandDenied")));
             }
         } else {
-            sender.sendMessage(oneWayElytra.prefix + "Nice try :)");
+            sender.sendMessage(oneWayElytra.prefix + "*~*~*~*~*~*~*~* <<OneWayElytra>> *~*~*~*~*~*~*~*");
+            sender.sendMessage(oneWayElytra.prefix + "Version: " + oneWayElytra.getDescription().getVersion());
+            sender.sendMessage(oneWayElytra.prefix + "Author: " + oneWayElytra.getDescription().getAuthors());
+            sender.sendMessage(oneWayElytra.prefix + "*~*~*~*~*~*~*~* <<OneWayElytra>> *~*~*~*~*~*~*~*");
         }
         return false;
     }
