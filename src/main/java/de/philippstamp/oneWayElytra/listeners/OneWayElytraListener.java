@@ -52,16 +52,6 @@ public class OneWayElytraListener implements Listener {
 
                     boolean wgAllowed = set.testState(localPlayer, WorldguardFlags.ONEWAYELYTRA);
                     boolean inRadiusArea = oneWayElytra.getRadiusManager().isInAnyArea(player.getLocation());
-/*
-                    if ((wgAllowed || inRadiusArea)
-                            && player.getGameMode() == GameMode.SURVIVAL
-                            && !playersFlying.contains(player)
-                            && player.isOnGround()) {
-
-                        player.setAllowFlight(true);
-                    }
-
- */
 
                     if ((wgAllowed || inRadiusArea) && !playersFlying.contains(player) && player.isOnGround()) {
                         if(player.getGameMode() == GameMode.SURVIVAL || player.getGameMode() == GameMode.ADVENTURE && oneWayElytra.getFileManager().getConfig().getBoolean("adventure")) {
@@ -70,7 +60,6 @@ public class OneWayElytraListener implements Listener {
                     }
 
                 }
-
 
                 if (player.getGameMode() == GameMode.SURVIVAL || player.getGameMode() == GameMode.ADVENTURE) {
                     if (playersFlying.contains(player)
@@ -155,13 +144,10 @@ public class OneWayElytraListener implements Listener {
         }
     }
 
-
     @EventHandler
     public void onEntityGlide(EntityToggleGlideEvent event){
         if (event.getEntityType() == EntityType.PLAYER && playersFlying.contains(event.getEntity())) event.setCancelled(true);
     }
-
-
 
     @EventHandler
     public void onPlayerTeleport(PlayerTeleportEvent event) {
