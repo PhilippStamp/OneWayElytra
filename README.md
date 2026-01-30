@@ -1,6 +1,8 @@
 
 # OneWayElytra
-Do you wanna fly into the air? Even without ever entering the end? This plugin adds a one-way-elytra for your spawn. Players are able to fly into the air and boost once they are in the air.
+Do you want to glied from your spawn into the unknown? Even without ever entering the end? This plugin adds a one-way-elytra for your spawn. Players are able to fly into the air and boost once they are in the air.
+
+![Example](https://api.philippstamp.de/jugglegaming/plugins/onewayelytra/example.gif)
 
 ## Features
 - 🪽 fly into the air without an elytra
