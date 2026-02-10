@@ -1,12 +1,12 @@
-package de.philippstamp.oneWayElytra;
+package de.jugglegaming.oneWayElytra;
 
-import de.philippstamp.oneWayElytra.commands.OneWayElytraCMD;
-import de.philippstamp.oneWayElytra.listeners.OneWayElytraListener;
-import de.philippstamp.oneWayElytra.managers.FileManager;
-import de.philippstamp.oneWayElytra.managers.RadiusManager;
-import de.philippstamp.oneWayElytra.utils.Tools;
-import de.philippstamp.oneWayElytra.utils.WorldguardFlags;
-import de.philippstamp.oneWayElytra.utils.WorldguardUtils;
+import de.jugglegaming.oneWayElytra.commands.OneWayElytraCMD;
+import de.jugglegaming.oneWayElytra.listeners.OneWayElytraListener;
+import de.jugglegaming.oneWayElytra.managers.FileManager;
+import de.jugglegaming.oneWayElytra.managers.RadiusManager;
+import de.jugglegaming.oneWayElytra.utils.Tools;
+import de.jugglegaming.oneWayElytra.utils.WorldguardFlags;
+import de.jugglegaming.oneWayElytra.utils.WorldguardUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.event.EventHandler;

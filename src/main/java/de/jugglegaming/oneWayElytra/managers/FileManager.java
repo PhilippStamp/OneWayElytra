@@ -1,5 +1,5 @@
-package de.philippstamp.oneWayElytra.managers;
-import de.philippstamp.oneWayElytra.OneWayElytra;
+package de.jugglegaming.oneWayElytra.managers;
+import de.jugglegaming.oneWayElytra.OneWayElytra;
 import dev.dejvokep.boostedyaml.YamlDocument;
 import dev.dejvokep.boostedyaml.dvs.versioning.BasicVersioning;
 import dev.dejvokep.boostedyaml.settings.dumper.DumperSettings;

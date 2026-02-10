@@ -1,4 +1,4 @@
-package de.philippstamp.oneWayElytra.utils;
+package de.jugglegaming.oneWayElytra.utils;
 
 import com.sk89q.worldedit.util.Location;
 import com.sk89q.worldguard.LocalPlayer;

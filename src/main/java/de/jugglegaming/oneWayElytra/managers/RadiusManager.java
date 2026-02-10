@@ -1,6 +1,6 @@
-package de.philippstamp.oneWayElytra.managers;
+package de.jugglegaming.oneWayElytra.managers;
 
-import de.philippstamp.oneWayElytra.utils.RadiusArea;
+import de.jugglegaming.oneWayElytra.utils.RadiusArea;
 import dev.dejvokep.boostedyaml.YamlDocument;
 import org.bukkit.Location;
 

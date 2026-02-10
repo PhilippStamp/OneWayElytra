@@ -1,7 +1,7 @@
-package de.philippstamp.oneWayElytra.commands;
+package de.jugglegaming.oneWayElytra.commands;
 
-import de.philippstamp.oneWayElytra.OneWayElytra;
-import de.philippstamp.oneWayElytra.listeners.OneWayElytraListener;
+import de.jugglegaming.oneWayElytra.OneWayElytra;
+import de.jugglegaming.oneWayElytra.listeners.OneWayElytraListener;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

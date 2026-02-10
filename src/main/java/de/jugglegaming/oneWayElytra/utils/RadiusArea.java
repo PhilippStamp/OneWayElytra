@@ -1,4 +1,4 @@
-package de.philippstamp.oneWayElytra.utils;
+package de.jugglegaming.oneWayElytra.utils;
 
 import org.bukkit.Location;
 

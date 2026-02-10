@@ -1,6 +1,6 @@
-package de.philippstamp.oneWayElytra.utils;
+package de.jugglegaming.oneWayElytra.utils;
 
-import de.philippstamp.oneWayElytra.OneWayElytra;
+import de.jugglegaming.oneWayElytra.OneWayElytra;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 

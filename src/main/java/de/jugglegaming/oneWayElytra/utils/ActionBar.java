@@ -2,7 +2,7 @@
  * Created by Philipp A. Stamp
  * Date: 28. Mär 2020
  */
-package de.philippstamp.oneWayElytra.utils;
+package de.jugglegaming.oneWayElytra.utils;
 
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.BaseComponent;

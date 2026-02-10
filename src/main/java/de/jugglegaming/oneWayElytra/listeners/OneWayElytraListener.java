@@ -1,4 +1,4 @@
-package de.philippstamp.oneWayElytra.listeners;
+package de.jugglegaming.oneWayElytra.listeners;
 
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldguard.LocalPlayer;
@@ -7,10 +7,10 @@ import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import com.sk89q.worldguard.protection.regions.RegionQuery;
-import de.philippstamp.oneWayElytra.OneWayElytra;
-import de.philippstamp.oneWayElytra.utils.ActionBar;
-import de.philippstamp.oneWayElytra.utils.WorldguardFlags;
-import de.philippstamp.oneWayElytra.utils.WorldguardUtils;
+import de.jugglegaming.oneWayElytra.OneWayElytra;
+import de.jugglegaming.oneWayElytra.utils.ActionBar;
+import de.jugglegaming.oneWayElytra.utils.WorldguardFlags;
+import de.jugglegaming.oneWayElytra.utils.WorldguardUtils;
 import org.bukkit.*;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.EntityType;
